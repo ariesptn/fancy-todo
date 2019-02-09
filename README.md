@@ -85,6 +85,7 @@ GET /api/projects
 ```
 POST /api/projects
 ```
+### Body
 ```name``` : project name  
 ```description``` : project description  
 
@@ -97,6 +98,7 @@ GET /api/projects/:projectId
 ```
 PUT /api/projects/:projectId
 ```
+### Body
 ```name``` : project name  
 ```description``` : project description  
 
