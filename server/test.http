@@ -28,7 +28,7 @@ Content-Type: application/x-www-form-urlencoded
 name=makan&description=makan nasi goreng&dueDate=2019-12-31&owner=nasi&status=unfinished
 
 ###
-DELETE http://localhost:3000/api/todos/5c5e7ad6b4091d248bdaf3df
+DELETE http://localhost:3000/api/todos/5c5ebb94573e794136049bb2
 token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1YzVlNWFlYzg4ZDBkYjE5NGE3Y2M2ZmIiLCJlbWFpbCI6ImFyaWVzcHRuQGdtYWlsLmNvbSIsIm5hbWUiOiJBcmllIFNlcHRpYW4iLCJnb29nbGVDbGllbnRJZCI6IjExNTE2Nzk1NzQ0MzMzODI2NTUwOCIsIl9fdiI6MCwiaWF0IjoxNTQ5Njg3NTMzfQ.zHLvjRpRRoLXiOjhz3etGyWGwp0JgxDvdRZi5JK9JYc
 
 ###

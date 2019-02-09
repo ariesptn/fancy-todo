@@ -37,17 +37,19 @@ class TodoController {
     static async create(req, res) {
         try {
             let type = 'personal'
-            let project = ''
+            let project = undefined
+            let user = req.auth._id
             if (req.params.projectId) {
                 type = 'project'
                 project = req.params.projectId
+                user = undefined
             }
             let todoData = await models.Todo.create({
                 name: req.body.name,
                 description: req.body.description,
                 status: req.body.status,
                 dueDate: req.body.dueDate,
-                user: req.auth._id,
+                user,
                 type,
                 project,
             })

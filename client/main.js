@@ -1,94 +1,9 @@
+let token = localStorage.getItem('token')
 let baseUrl = 'http://localhost:3000'
-let repoData = []
-let orgData = []
-
-function showRepo(username) {
-    $('#repolist').text('Please wait...')
-    let searchCategory = $('input[name=searchCategory]:checked', '#userRadio').val()
-    $.ajax({
-        url: `${baseUrl}/api/${searchCategory}/${username}`,
-        headers: { 'token': localStorage.getItem('token') }
-    })
-        .done(response => {
-            repoData = response
-            searchRepo()
-        })
-        .fail(response => {
-            showError(response)
-            $('#repolist').text('An error has occurred.')
-            console.log(response)
-        })
-}
-
-function searchRepo() {
-    let repolist = ''
-    let search = $('#repoSearch').val()
-    let filteredRepos = repoData.filter(e => {
-        let full_name = e.full_name || ''
-        let description = e.description || ''
-        return full_name.includes(search) || description.includes(search)
-    })
-    filteredRepos.forEach((v, i) => {
-        repolist += `
-            <a href="#" onclick="showDetails('${v.full_name}')">${v.full_name}</a><br>
-            ${v.description || 'no description'}<br>
-            <a href="${v.html_url}">Github page</a><br><br>
-            `
-    })
-    $('#repolist').html(repolist)
-}
-
-function showDetails(full_name) {
-    $('#details').text('Please wait...')
-    $.ajax({
-        url: `${baseUrl}/api/readme/${full_name}`,
-        headers: { 'token': localStorage.getItem('token') }
-    })
-        .done(response => {
-            $('#details').html(response)
-        })
-        .fail(response => {
-            showError(response)
-            $('#details').text('An error has occurred.')
-            console.log(response)
-        })
-}
-
-function showError(error) {
-    $('#error').show()
-    $('#error').text(`${JSON.stringify(error)}`)
-    setTimeout(() => {
-        $('#error').hide()
-    }, 10000)
-}
-
-function createRepo() {
-    let name = $('#createRepoName').val()
-    let data = {
-        "name": name,
-        "description": "",
-        "homepage": "",
-        "private": true,
-        "has_issues": true,
-        "has_projects": true,
-        "has_wiki": true
-    }
-    $.ajax({
-        type: "POST",
-        url: `${baseUrl}/api/repos/create`,
-        data,
-        headers: {
-            'token': localStorage.getItem('token')
-        }
-    })
-        .done(response => {
-            showError({ message: `Repo ${name} was created successfully` })
-        })
-        .fail(response => {
-            showError(response)
-            console.log(response)
-        })
-}
+let spinner = `
+    <div class="spinner-border" role="status">
+    <span class="sr-only">Loading...</span>
+    </div>`
 
 function signOut() {
     let auth2 = gapi.auth2.getAuthInstance();
@@ -96,6 +11,7 @@ function signOut() {
         console.log('User signed out.');
     });
     localStorage.removeItem('token')
+    token = ''
     $('#loginInfo').hide()
     $('#loginButton').show()
     $('#contents').hide()
@@ -119,35 +35,144 @@ function onSignIn(googleUser) {
     })
         .done(response => {
             localStorage.setItem('token', response.token)
+            token = localStorage.getItem('token')
             $('#username').text(profile.getName())
             $('#email').text(profile.getEmail())
             $('#loginInfo').show()
             $('#loginButton').hide()
             $('#contents').show()
-            showUsers()
         })
         .fail(response => {
             showError(response)
-            console.log(response)
         })
-
 }
 
-function showUsers() {
-    $.ajax({
-        url: `${baseUrl}/api/orgs/members/active-fox-2018`,
-        headers: { 'token': localStorage.getItem('token') }
-    })
+function showError(err) {
+    $('#errorMessage').text(JSON.stringify(err))
+    $('#errorMessage').show()
+    setTimeout(() => {
+        $('#errorMessage').hide()
+    }, 10000)
+    console.log(response)
+}
+
+function getPersonalTodoList() {
+    $('#todoList').html(spinner)
+    $('#todoForm').hide()
+    $.ajax({ url: `${baseUrl}/api/todos`, headers: { token } })
         .done(response => {
-            orgData = response
-            let userList = ''
-            orgData.forEach((v, i) => {
-                userList += `<li><a href="#" onclick="showRepo('${v.login}')">${v.login}</a></li>`
-            })
-            $('#userList').html(userList)
+            showTodoList(response)
         })
         .fail(response => {
             showError(response)
-            console.log(response)
         })
 }
+
+function showTodoList(data) {
+    let html = ''
+    data.forEach((e, i) => {
+        html += `
+            <li class="list-group-item" id="todo-${i}">
+            <p><strong>Name</strong> : ${e.name}</p>
+            <p><strong>Description</strong> : ${e.description}</p>
+            <p><strong>Due date</strong> : ${e.dueDate}</p>
+            <p><strong>Status</strong> : ${e.status}</p>
+            <p><button class="btn" id="editTodo-${i}">Edit</button>
+            <button class="btn" id="deleteTodo-${i}">Delete</button></p>
+            </li>
+            `
+    })
+    $('#todoList').html(html)
+    data.forEach((e, i) => {
+        $(`#editTodo-${i}`).off('click')
+        $(`#editTodo-${i}`).on('click', function () {
+            $('#todoName').val(e.name)
+            $('#todoDescription').val(e.description)
+            $('#todoDueDate').val(e.dueDate)
+            $('#todoStatusUnfinished').prop('checked', e.status == 'unfinished')
+            $('#todoStatusFinished').prop('checked', e.status == 'finished')
+            $('#todoDelete').show()
+            $('#todoForm').show()
+            $('#todoSubmit').off('click')
+            $('#todoSubmit').on('click', function () {
+                $.ajax({
+                    url: `${baseUrl}/api/todos/${e._id}`,
+                    method: 'PUT',
+                    headers: { token },
+                    data: {
+                        name: $('#todoName').val(),
+                        description: $('#todoDescription').val(),
+                        dueDate: $('#todoDueDate').val(),
+                        status: $('#todoForm input[name=todoStatus]:checked').val(),
+                    }
+                })
+                    .done(response => {
+                        getPersonalTodoList()
+                    })
+                    .fail(response => {
+                        showError(response)
+                    })
+            })
+        })
+        $(`#deleteTodo-${i}`).off('click')
+        $(`#deleteTodo-${i}`).on('click', function () {
+            $.ajax({
+                url: `${baseUrl}/api/todos/${e._id}`,
+                method: 'DELETE',
+                headers: { token },
+            })
+                .done(response => {
+                    getPersonalTodoList()
+                })
+                .fail(response => {
+                    showError(response)
+                })
+
+        })
+    })
+}
+
+function showCreatePersonalTodoForm() {
+    $('#todoName').val('')
+    $('#todoDescription').val('')
+    $('#todoDueDate').val('')
+    $('#todoStatusUnfinished').prop('checked', true)
+    $('#todoForm').show()
+    $('#todoDelete').hide()
+    $('#todoSubmit').off('click')
+    $('#todoSubmit').on('click', function () {
+        $.ajax({
+            url: `${baseUrl}/api/todos`,
+            method: 'POST',
+            headers: { token },
+            data: {
+                name: $('#todoName').val(),
+                description: $('#todoDescription').val(),
+                dueDate: $('#todoDueDate').val(),
+                status: $('#todoForm input[name=todoStatus]:checked').val(),
+            }
+        })
+            .done(response => {
+                getPersonalTodoList()
+            })
+            .fail(response => {
+                showError(response)
+            })
+    })
+}
+
+
+$('#errorMessage').hide()
+$('#todoForm').hide()
+
+$('#todoCancel').on('click', function () {
+    $('#todoForm').hide()
+})
+
+$('#createPersonalTodo').on('click', function () {
+    showCreatePersonalTodoForm()
+})
+
+$('#getPersonalTodo').on('click', function () {
+    getPersonalTodoList()
+})
