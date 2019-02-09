@@ -5,7 +5,9 @@ const todoSchema = mongoose.Schema({
     description: String,
     status: String,
     dueDate: Date,
-    owner: { type: mongoose.Schema.Types.ObjectId, ref: 'users' }
+    type: String,
+    project: { type: mongoose.Schema.Types.ObjectId, ref: 'projects' },
+    user: { type: mongoose.Schema.Types.ObjectId, ref: 'users' }
 })
 
 const Todo = mongoose.model('todos', todoSchema)
