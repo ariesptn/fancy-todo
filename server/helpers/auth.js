@@ -24,7 +24,7 @@ async function authentication(req, res, next) {
 
 async function todoAuthorization(req, res, next) {
     try {
-        let todoData = await models.Todo.findById(req.params.userId).lean()
+        let todoData = await models.Todo.findById(req.params.todoId).lean()
         if (!todoData) {
             throw { message: 'todo is not found' }
         } else if (todoData.type == 'personal') {

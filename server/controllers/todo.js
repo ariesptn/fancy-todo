@@ -25,7 +25,7 @@ class TodoController {
 
     static async findOne(req, res) {
         try {
-            let todoData = await models.Todo.findOne({ _id: req.params.userId })
+            let todoData = await models.Todo.findOne({ _id: req.params.todoId })
                 .populate('user').lean()
             res.status(200).json(todoData)
         } catch (err) {
@@ -61,7 +61,7 @@ class TodoController {
     static async update(req, res) {
         try {
             let todoData = await models.Todo.findOneAndUpdate(
-                { _id: req.params.userId },
+                { _id: req.params.todoId },
                 {
                     $set: {
                         name: req.body.name,
@@ -79,7 +79,7 @@ class TodoController {
 
     static async delete(req, res) {
         try {
-            let todoData = await models.Todo.findOneAndDelete({ _id: req.params.userId })
+            let todoData = await models.Todo.findOneAndDelete({ _id: req.params.todoId })
             res.status(200).json(todoData)
         } catch (err) {
             console.log(err)
