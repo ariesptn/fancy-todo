@@ -38,6 +38,7 @@ function onSignIn(googleUser) {
             token = localStorage.getItem('token')
             $('#username').text(profile.getName())
             $('#email').text(profile.getEmail())
+            getPersonalTodoList()
             $('#loginInfo').show()
             $('#loginButton').hide()
             $('#contents').show()
@@ -174,3 +175,4 @@ $('#createPersonalTodo').on('click', function () {
 $('#getPersonalTodo').on('click', function () {
     getPersonalTodoList()
 })
+
