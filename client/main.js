@@ -91,7 +91,6 @@ function showTodoList(data) {
             $('#todoDueDate').val(e.dueDate)
             $('#todoStatusUnfinished').prop('checked', e.status == 'unfinished')
             $('#todoStatusFinished').prop('checked', e.status == 'finished')
-            $('#todoDelete').show()
             $('#todoForm').show()
             $('#todoSubmit').off('click')
             $('#todoSubmit').on('click', function () {
@@ -138,7 +137,6 @@ function showCreatePersonalTodoForm() {
     $('#todoDueDate').val('')
     $('#todoStatusUnfinished').prop('checked', true)
     $('#todoForm').show()
-    $('#todoDelete').hide()
     $('#todoSubmit').off('click')
     $('#todoSubmit').on('click', function () {
         $.ajax({
