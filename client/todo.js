@@ -40,7 +40,7 @@ function showTodoList(todoData, projectData) {
             $('#todoFormTitle').text(`Edit todo : ${e.name}`)
             $('#todoName').val(e.name)
             $('#todoDescription').val(e.description)
-            $('#todoDueDate').val(e.dueDate)
+            $("#todoDueDate").val(new Date(e.dueDate).toISOString().split('T')[0])
             $('#todoStatusUnfinished').prop('checked', e.status == 'unfinished')
             $('#todoStatusFinished').prop('checked', e.status == 'finished')
             $('#todoForm').show()
@@ -88,7 +88,7 @@ function showCreateTodoForm(projectData) {
     $('#todoFormTitle').text(`New todo`)
     $('#todoName').val('')
     $('#todoDescription').val('')
-    $('#todoDueDate').val('')
+    $("#todoDueDate").val(new Date().toISOString().split('T')[0])
     $('#todoStatusUnfinished').prop('checked', true)
     $('#todoSubmit').off('click')
     let url = `${baseUrl}`
