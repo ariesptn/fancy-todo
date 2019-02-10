@@ -12,9 +12,66 @@ function signOut() {
     });
     localStorage.removeItem('token')
     token = ''
-    $('#loginInfo').hide()
-    $('#loginButton').show()
-    $('#contents').hide()
+    loginVerify()
+}
+
+function login() {
+    $.ajax({
+        url: `${baseUrl}/api/users/login`,
+        method: 'POST',
+        data: {
+            email: $('#loginEmail').val(),
+            password: $('#loginPassword').val()
+        }
+    })
+        .done(response => {
+            localStorage.setItem('token', response.token)
+            token = localStorage.getItem('token')
+            loginVerify()
+        })
+        .fail(response => {
+            showError(response)
+        })
+}
+
+function register() {
+    $.ajax({
+        url: `${baseUrl}/api/users/register`,
+        method: 'POST',
+        data: {
+            name: $('#registerName').val(),
+            email: $('#registerEmail').val(),
+            password: $('#registerPassword').val()
+        }
+    })
+        .done(response => {
+            localStorage.setItem('token', response.token)
+            token = localStorage.getItem('token')
+            loginVerify()
+        })
+        .fail(response => {
+            showError(response)
+        })
+}
+
+function loginVerify() {
+    $.ajax({
+        url: `${baseUrl}/api/users/loginverify`,
+        headers: { token }
+    })
+        .done(response => {
+            $('#contents').show()
+            $('#loginRegister').hide()
+            $('#username').text(response.name)
+            $('#email').text(response.email)
+            getTodoList()
+        })
+        .fail(response => {
+            $('#contents').hide()
+            $('#loginRegister').show()
+            localStorage.removeItem('token')
+            token = ''
+        })
 }
 
 function onSignIn(googleUser) {
@@ -34,14 +91,11 @@ function onSignIn(googleUser) {
         }
     })
         .done(response => {
-            localStorage.setItem('token', response.token)
-            token = localStorage.getItem('token')
-            $('#username').text(profile.getName())
-            $('#email').text(profile.getEmail())
-            getPersonalTodoList()
-            $('#loginInfo').show()
-            $('#loginButton').hide()
-            $('#contents').show()
+            if (!localStorage.getItem('token')) {
+                localStorage.setItem('token', response.token)
+                token = localStorage.getItem('token')
+                loginVerify()
+            }
         })
         .fail(response => {
             showError(response)
@@ -57,122 +111,45 @@ function showError(err) {
     console.log(response)
 }
 
-function getPersonalTodoList() {
-    $('#todoList').html(spinner)
-    $('#todoForm').hide()
-    $.ajax({ url: `${baseUrl}/api/todos`, headers: { token } })
-        .done(response => {
-            showTodoList(response)
-        })
-        .fail(response => {
-            showError(response)
-        })
-}
-
-function showTodoList(data) {
-    let html = ''
-    data.forEach((e, i) => {
-        html += `
-            <li class="list-group-item" id="todo-${i}">
-            <p><strong>Name</strong> : ${e.name}</p>
-            <p><strong>Description</strong> : ${e.description}</p>
-            <p><strong>Due date</strong> : ${e.dueDate}</p>
-            <p><strong>Status</strong> : ${e.status}</p>
-            <p><button class="btn" id="editTodo-${i}">Edit</button>
-            <button class="btn" id="deleteTodo-${i}">Delete</button></p>
-            </li>
-            `
-    })
-    $('#todoList').html(html)
-    data.forEach((e, i) => {
-        $(`#editTodo-${i}`).off('click')
-        $(`#editTodo-${i}`).on('click', function () {
-            $('#todoName').val(e.name)
-            $('#todoDescription').val(e.description)
-            $('#todoDueDate').val(e.dueDate)
-            $('#todoStatusUnfinished').prop('checked', e.status == 'unfinished')
-            $('#todoStatusFinished').prop('checked', e.status == 'finished')
-            $('#todoForm').show()
-            $('#todoSubmit').off('click')
-            $('#todoSubmit').on('click', function () {
-                $.ajax({
-                    url: `${baseUrl}/api/todos/${e._id}`,
-                    method: 'PUT',
-                    headers: { token },
-                    data: {
-                        name: $('#todoName').val(),
-                        description: $('#todoDescription').val(),
-                        dueDate: $('#todoDueDate').val(),
-                        status: $('#todoForm input[name=todoStatus]:checked').val(),
-                    }
-                })
-                    .done(response => {
-                        getPersonalTodoList()
-                    })
-                    .fail(response => {
-                        showError(response)
-                    })
-            })
-        })
-        $(`#deleteTodo-${i}`).off('click')
-        $(`#deleteTodo-${i}`).on('click', function () {
-            $.ajax({
-                url: `${baseUrl}/api/todos/${e._id}`,
-                method: 'DELETE',
-                headers: { token },
-            })
-                .done(response => {
-                    getPersonalTodoList()
-                })
-                .fail(response => {
-                    showError(response)
-                })
-
-        })
-    })
-}
-
-function showCreatePersonalTodoForm() {
-    $('#todoName').val('')
-    $('#todoDescription').val('')
-    $('#todoDueDate').val('')
-    $('#todoStatusUnfinished').prop('checked', true)
-    $('#todoForm').show()
-    $('#todoSubmit').off('click')
-    $('#todoSubmit').on('click', function () {
-        $.ajax({
-            url: `${baseUrl}/api/todos`,
-            method: 'POST',
-            headers: { token },
-            data: {
-                name: $('#todoName').val(),
-                description: $('#todoDescription').val(),
-                dueDate: $('#todoDueDate').val(),
-                status: $('#todoForm input[name=todoStatus]:checked').val(),
-            }
-        })
-            .done(response => {
-                getPersonalTodoList()
-            })
-            .fail(response => {
-                showError(response)
-            })
-    })
-}
-
-
+$('#contents').hide()
 $('#errorMessage').hide()
 $('#todoForm').hide()
+$('#projectForm').hide()
+$('#projectFrame').hide()
 
 $('#todoCancel').on('click', function () {
     $('#todoForm').hide()
 })
 
+$('#projectCancel').on('click', function () {
+    $('#projectForm').hide()
+})
+
 $('#createPersonalTodo').on('click', function () {
-    showCreatePersonalTodoForm()
+    showCreateTodoForm()
+})
+
+$('#createProject').on('click', function () {
+    showCreateProjectForm()
 })
 
 $('#getPersonalTodo').on('click', function () {
-    getPersonalTodoList()
+    getTodoList()
 })
 
+$('#getProjectList').on('click', function () {
+    getProjectList()
+})
+
+$('#registerForm').show()
+$('#loginForm').show()
+
+$('#loginSubmit').on('click', function () {
+    login()
+})
+$('#registerSubmit').on('click', function () {
+    register()
+})
+
+
+loginVerify()

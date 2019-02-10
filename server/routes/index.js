@@ -19,6 +19,7 @@ router.delete('/api/stars/:username/:repo', authentication, GithubController.uns
 
 router.post('/api/users/register', UserController.register)
 router.post('/api/users/login', UserController.login)
+router.get('/api/users/loginverify', authentication, UserController.loginVerify)
 router.get('/api/googleloginverify', GoogleController.loginVerify)
 
 router.get('/api/todos', authentication, TodoController.find)

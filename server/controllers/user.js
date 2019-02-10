@@ -36,6 +36,10 @@ class UserController {
             res.status(500).json(err)
         }
     }
+
+    static async loginVerify(req, res) {
+        res.status(200).send(req.auth)
+    }
 }
 
 module.exports = UserController
