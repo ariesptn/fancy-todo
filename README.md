@@ -6,11 +6,10 @@ To run the project make sure you have node and npm.
 Rename the .env-template file in the server directory to .env.  
 Open the .env file to configure it.  
 
-To run the server:
+To run the server, go to server directory then run:
 
 ```
 npm install
-cd ./server
 node app.js
 ```
 
