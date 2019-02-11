@@ -21,10 +21,10 @@ function showProjectList(data) {
             <li class="list-group-item" id="todo-${i}">
             <p><strong>Name</strong> : ${e.name}</p>
             <p><strong>Description</strong> : ${e.description}</p>
-            <p><button class="btn" id="getProjectTodo-${i}">Show todos</button>
-            <button class="btn" id="createProjectTodo-${i}">Create a todo</button>
-            <button class="btn" id="editProject-${i}">Edit</button>
-            <button class="btn" id="deleteProject-${i}">Delete</button>
+            <p><button class="btn btn-primary" id="getProjectTodo-${i}">Show todos</button>
+            <button class="btn btn-primary" id="createProjectTodo-${i}">Create a todo</button>
+            <button class="btn btn-primary" id="editProject-${i}">Edit</button>
+            <button class="btn btn-primary" id="deleteProject-${i}">Delete</button>
             </p>
             </li>
             `
@@ -42,7 +42,7 @@ function showProjectList(data) {
                 memberHtml += `
                     <div>
                     ${member.name} (${member.email})
-                    <button class="btn" id="removeMember-${memberIndex}">x</button>
+                    <button class="btn btn-primary" id="removeMember-${memberIndex}">x</button>
                     </div>
                     `
             })

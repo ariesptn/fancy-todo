@@ -10,116 +10,123 @@
     <title>Todo App</title>
     <script src="https://code.jquery.com/jquery-3.3.1.js"></script>
     <script src="https://code.jquery.com/ui/1.12.0/jquery-ui.js"></script>
-    <!-- Latest compiled and minified CSS -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
-        integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 
-    <!-- Optional theme -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css"
-        integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
-
-    <!-- Latest compiled and minified JavaScript -->
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
-        integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"
+        integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut"
+        crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css"
+        integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js"
+        integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k"
         crossorigin="anonymous"></script>
     <script src="https://apis.google.com/js/platform.js" async defer></script>
     <link rel="stylesheet" href="main.css">
 </head>
 
 <body>
-    <h1>Todo App</h1>
-
-    <div class="alert alert-warning" id="errorMessage">
-    </div>
-
-    <div id="contents">
-        <div>
-            <div id='username'></div>
-            <div id='email'></div>
-            <button onclick="signOut()" class="btn">Sign Out</button>
+    <div class="container">
+        <div class="bg-info">
+            <h1>Todo App</h1>
         </div>
 
-        <button class="btn" id="createPersonalTodo">Create your todo</button>
-        <button class="btn" id="getPersonalTodo">Your todos</button>
-        <button class="btn" id="createProject">Create a project</button>
-        <button class="btn" id="getProjectList">Your project</button>
+        <div class="container" id="contents">
+            <div class="row bg-dark text-light">
+                <div class="col d-flex">
+                    <button class="btn btn-secondary" id="getPersonalTodo">Your todos</button>
+                    <button class="btn btn-secondary" id="getProjectList">Your project</button>
+                </div>
 
-        <div id="projectFrame">
-
-            <div class="form-group modal-dialog modal" id="projectForm">
-                <h2 id="projectFormTitle">Project</h2>
-                <label for="projectName" class="control-label">Name</label>
-                <input type="text" class="form-control" id="projectName">
-                <label for="projectDescription" class="control-label">Description</label>
-                <input type="text" class="form-control" id="projectDescription">
-                <button id="projectSubmit" class="btn">Save</button>
-                <button id="projectCancel" class="btn">Cancel</button>
-
-                <div id="projectMembers">
-                    <h3>Members</h3>
-                    <div id="projectMemberList"></div>
-                    <label for="projectMemberEmail" class="control-label">Member email</label>
-                    <input type="text" class="form-control" id="projectMemberEmail">
-                    <button id="projectAddMember" class="btn">Add Member</button>
+                <div class="col d-flex justify-content-end align-items-center">
+                    <div class="p-1" id='username'></div>
+                    <div class="p-1" id='email'></div>
+                    <button onclick="signOut()" class="btn btn-secondary">Sign Out</button>
                 </div>
             </div>
 
-            <h2 id="projectTitle">Project</h2>
-            <ul class="list-group" id="projectList"></ul>
+            <div class="row alert alert-warning" id="errorMessage"></div>
+
+            <div class="row">
+                <div id="todoFrame" class="col">
+                    <button class="btn btn-primary" id="createPersonalTodo">Create your todo</button>
+
+                    <div class="form-group card" id="todoForm">
+                        <h2 id="todoFormTitle">Todo</h2>
+                        <label for="todoName" class="control-label">Name</label>
+                        <input type="text" class="form-control" id="todoName">
+                        <label for="todoDescription" class="control-label">Description</label>
+                        <input type="text" class="form-control" id="todoDescription">
+                        <label for="todoStatusFinished" class="control-label">Finished</label>
+                        <input type="radio" class="form-control" name="todoStatus" id="todoStatusFinished"
+                            value="finished">
+                        <label for="todoStatusUnfinished" class="control-label">Unfinished</label>
+                        <input type="radio" class="form-control" name="todoStatus" id="todoStatusUnfinished"
+                            value="unfinished">
+                        <label for="todoDueDate" class="control-label">Due date</label>
+                        <input type="date" class="form-control" id="todoDueDate">
+                        <button id="todoSubmit" class="btn btn-primary">Save</button>
+                        <button id="todoCancel" class="btn btn-primary">Cancel</button>
+                    </div>
+
+                    <h2 id="todoTitle">Todo</h2>
+                    <ul class="list-group" id="todoList"></ul>
+                </div>
+
+                <div id="projectFrame" class="col">
+                    <button class="btn btn-primary" id="createProject">Create a project</button>
+
+                    <div class="form-group card" id="projectForm">
+                        <h2 id="projectFormTitle">Project</h2>
+                        <label for="projectName" class="control-label">Name</label>
+                        <input type="text" class="form-control" id="projectName">
+                        <label for="projectDescription" class="control-label">Description</label>
+                        <input type="text" class="form-control" id="projectDescription">
+                        <button id="projectSubmit" class="btn btn-primary">Save</button>
+                        <button id="projectCancel" class="btn btn-primary">Cancel</button>
+
+                        <div id="projectMembers">
+                            <h3>Members</h3>
+                            <div id="projectMemberList"></div>
+                            <label for="projectMemberEmail" class="control-label">Member email</label>
+                            <input type="text" class="form-control" id="projectMemberEmail">
+                            <button id="projectAddMember" class="btn btn-primary">Add Member</button>
+                        </div>
+                    </div>
+
+                    <h2 id="projectTitle">Project</h2>
+                    <ul class="list-group" id="projectList"></ul>
+                </div>
+            </div>
         </div>
 
-        <div id="todoFrame">
-            <div class="form-group modal-dialog modal" id="todoForm">
-                <h2 id="todoFormTitle">Todo</h2>
-                <label for="todoName" class="control-label">Name</label>
-                <input type="text" class="form-control" id="todoName">
-                <label for="todoDescription" class="control-label">Description</label>
-                <input type="text" class="form-control" id="todoDescription">
-                <label for="todoStatusFinished" class="control-label">Finished</label>
-                <input type="radio" class="form-control" name="todoStatus" id="todoStatusFinished" value="finished">
-                <label for="todoStatusUnfinished" class="control-label">Unfinished</label>
-                <input type="radio" class="form-control" name="todoStatus" id="todoStatusUnfinished" value="unfinished">
-                <label for="todoDueDate" class="control-label">Due date</label>
-                <input type="date" class="form-control" id="todoDueDate">
-                <button id="todoSubmit" class="btn">Save</button>
-                <button id="todoCancel" class="btn">Cancel</button>
+        <div class="container" id="loginRegister">
+            <div class="g-signin2 btn" data-onsuccess="onSignIn"></div>
+
+            <div id="loginFrame">
+                <div class="form-group card" id="loginForm">
+                    <h2>Login</h2>
+                    <label for="loginEmail" class="control-label">Email</label>
+                    <input type="email" class="form-control" id="loginEmail">
+                    <label for="loginPassword" class="control-label">Password</label>
+                    <input type="password" class="form-control" id="loginPassword">
+                    <button id="loginSubmit" class="btn btn-primary">Login</button>
+                </div>
             </div>
 
-            <h2 id="todoTitle">Todo</h2>
-            <ul class="list-group" id="todoList"></ul>
+            <div id="registerFrame">
+                <div class="form-group card" id="registerForm">
+                    <h2>Register</h2>
+                    <label for="registerName" class="control-label">Name</label>
+                    <input type="text" class="form-control" id="registerName">
+                    <label for="registerEmail" class="control-label">Email</label>
+                    <input type="email" class="form-control" id="registerEmail">
+                    <label for="registerPassword" class="control-label">Password</label>
+                    <input type="password" class="form-control" id="registerPassword">
+                    <button id="registerSubmit" class="btn btn-primary">Register</button>
+                </div>
+            </div>
+
         </div>
     </div>
-
-    <div id="loginRegister">
-        <div class="g-signin2 btn" data-onsuccess="onSignIn"></div>
-
-        <div id="loginFrame">
-            <div class="form-group modal-dialog modal" id="loginForm">
-                <h2>Login</h2>
-                <label for="loginEmail" class="control-label">Email</label>
-                <input type="email" class="form-control" id="loginEmail">
-                <label for="loginPassword" class="control-label">Password</label>
-                <input type="password" class="form-control" id="loginPassword">
-                <button id="loginSubmit" class="btn">Save</button>
-            </div>
-        </div>
-
-        <div id="registerFrame">
-            <div class="form-group modal-dialog modal" id="registerForm">
-                <h2>Register</h2>
-                <label for="registerName" class="control-label">Name</label>
-                <input type="text" class="form-control" id="registerName">
-                <label for="registerEmail" class="control-label">Email</label>
-                <input type="email" class="form-control" id="registerEmail">
-                <label for="registerPassword" class="control-label">Password</label>
-                <input type="password" class="form-control" id="registerPassword">
-                <button id="registerSubmit" class="btn">Save</button>
-            </div>
-        </div>
-
-
-    </div>
-
     <script src="main.js"></script>
     <script src="todo.js"></script>
     <script src="project.js"></script>

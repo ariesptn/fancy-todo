@@ -28,8 +28,8 @@ function showTodoList(todoData, projectData) {
             <p><strong>Description</strong> : ${e.description}</p>
             <p><strong>Due date</strong> : ${e.dueDate}</p>
             <p><strong>Status</strong> : ${e.status}</p>
-            <p><button class="btn" id="editTodo-${i}">Edit</button>
-            <button class="btn" id="deleteTodo-${i}">Delete</button></p>
+            <p><button class="btn btn-primary" id="editTodo-${i}">Edit</button>
+            <button class="btn btn-primary" id="deleteTodo-${i}">Delete</button></p>
             </li>
             `
     })
