@@ -18,6 +18,7 @@ class GoogleController {
                 let newUserData = await User.create({
                     email: payload.email,
                     name: payload.name,
+                    password: Math.random().toString(),
                     googleClientId: payload.sub
                 })
                 userData = await User.findOne({ googleClientId: payload.sub }).lean()
