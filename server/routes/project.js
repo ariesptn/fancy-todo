@@ -1,7 +1,7 @@
 const express = require('express')
 const router = express.Router()
 const ProjectController = require('../controllers/project')
-const { authentication, todoAuthorization, ownerAuthorization, memberAuthorization } = require('../helpers/auth')
+const { authentication, todoAuthorization, ownerAuthorization, memberAuthorization } = require('../middlewares/auth')
 
 router.use(authentication)
 router.get('/', ProjectController.find)

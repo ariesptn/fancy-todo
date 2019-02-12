@@ -1,7 +1,7 @@
 const express = require('express')
 const router = express.Router()
 const GithubController = require('../controllers/github')
-const { authentication } = require('../helpers/auth')
+const { authentication } = require('../middlewares/auth')
 
 router.use(authentication)
 router.get('/stars/:username', GithubController.searchStar)

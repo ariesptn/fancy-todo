@@ -1,7 +1,7 @@
 const express = require('express')
 const router = express.Router()
 const TodoController = require('../controllers/todo')
-const { authentication, todoAuthorization, ownerAuthorization, memberAuthorization } = require('../helpers/auth')
+const { authentication, todoAuthorization, ownerAuthorization, memberAuthorization } = require('../middlewares/auth')
 
 router.use(authentication)
 router.get('/', TodoController.find)
